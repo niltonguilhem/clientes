@@ -1,15 +1,15 @@
 version: '3.8'
 
 services:
-  postgres:
+  postgres: postgres_clientes
     image: postgres:latest
-    container_name: postgres
+    container_name: postgres_clientes
     environment:
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: mypassword
       POSTGRES_DB: clientes
     ports:
-      - "5434:5434"
+      - "5434:5432"
     volumes:
       - clientes_postgres:/var/lib/postgresql/data
 
