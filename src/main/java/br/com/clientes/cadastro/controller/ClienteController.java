@@ -27,10 +27,10 @@ public class ClienteController {
 	}
 
 	@GetMapping("/{cpf}")
-	public ResponseEntity<List<ClienteJson>> buscarClientePorCpf(@PathVariable String cpf) {
+	public ResponseEntity<ClienteJson> buscarClientePorCpf(@PathVariable String cpf) {
 		List<Cliente> clientes = gerenciarClienteUsecase.buscarClientePorCpf(cpf);
 		List<ClienteJson> clienteJsons = clientes.stream().map(this::mapToJson).collect(Collectors.toList());
-		return ResponseEntity.ok(clienteJsons);
+		return ResponseEntity.ok(clienteJsons.getFirst());
 	}
 
 	@GetMapping("nome/{nome}")
