@@ -12,94 +12,96 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class ClienteJpaGateway implements ClienteGateway {
 
+    private static final String ERRO_CLIENTE = "Cliente não encontrado.";
+    private static final String ERRO_REPOSITORY = "Erro ao acessar repositório.";
 
-	private final ClienteRepository clienteRepository;
+    private final ClienteRepository clienteRepository;
 
-	@Override
-	public void cadastrarCliente(Cliente cliente) {
-		try {
-			ClienteEntity clienteEntity = mapToEntity(cliente);
-			log.info("Salvando cliente no banco: {}", clienteEntity.getCpf());			clienteRepository.save(clienteEntity);
+    @Override
+    public void cadastrarCliente(Cliente cliente) {
+        try {
+            ClienteEntity clienteEntity = mapToEntity(cliente);
+            log.info("Salvando cliente no banco: {}", clienteEntity.getCpf());
+            clienteRepository.save(clienteEntity);
 
-		}catch (Exception e){
-			log.error("Erro ao salvar cliente no banco", e);
-			throw new ErroAcessarRepositorioException();
-		}
+        } catch (Exception e) {
+            log.error("Erro ao salvar cliente no banco", e);
+            throw new ErroAcessarRepositorioException(ERRO_REPOSITORY);
+        }
 
-	}
+    }
 
-	@Override
-	public Optional<Cliente> atualizarCliente(String cpf, Cliente cliente) {
-		Optional<ClienteEntity> clienteEntity = clienteRepository.findByCpf(cpf);
-		if(clienteEntity.isEmpty()){
-			throw new ClienteNaoEncontradoException();
-		}
-		return Optional.of(mapToDomain(clienteRepository.save(mapToEntity(cliente))));
-	}
+    @Override
+    public Optional<Cliente> atualizarCliente(String cpf, Cliente cliente) {
+        Optional<ClienteEntity> clienteEntity = clienteRepository.findByCpf(cpf);
+        if (clienteEntity.isEmpty()) {
+            throw new ClienteNaoEncontradoException(ERRO_CLIENTE);
+        }
+        return Optional.of(mapToDomain(clienteRepository.save(mapToEntity(cliente))));
+    }
 
-	@Override
-	public void removerCliente(String cpf) {
-		try {
-			clienteRepository.deleteByCpf(cpf);
-		}catch (Exception e){
-			throw new ErroAcessarRepositorioException();
-		}
-	}
+    @Override
+    public void removerCliente(String cpf) {
+        try {
+            clienteRepository.deleteByCpf(cpf);
+        } catch (Exception e) {
+            throw new ErroAcessarRepositorioException(ERRO_REPOSITORY);
+        }
+    }
 
-	@Override
-	public List<Cliente> buscarClientePorNome(String nome) {
-		List<ClienteEntity> clientes = clienteRepository.findByNome(nome);
+    @Override
+    public List<Cliente> buscarClientePorNome(String nome) {
+        List<ClienteEntity> clientes = clienteRepository.findByNome(nome);
 
-		if(clientes.isEmpty()){
-			throw new ClienteNaoEncontradoException();
-		}
+        if (clientes.isEmpty()) {
+            throw new ClienteNaoEncontradoException(ERRO_CLIENTE);
+        }
 
-		return clientes.stream().map(this::mapToDomain).collect(Collectors.toList());
-	}
+        return clientes.stream().map(this::mapToDomain).toList();
+    }
 
-	@Override
-	public List<Cliente> buscarClientePorCep(String cep) {
-		List<ClienteEntity> clientes = clienteRepository.findByCep(cep);
+    @Override
+    public List<Cliente> buscarClientePorCep(String cep) {
+        List<ClienteEntity> clientes = clienteRepository.findByCep(cep);
 
-		if(clientes.isEmpty()){
-			throw new ClienteNaoEncontradoException();
-		}
+        if (clientes.isEmpty()) {
+            throw new ClienteNaoEncontradoException(ERRO_CLIENTE);
+        }
 
-		return clientes.stream().map(this::mapToDomain).collect(Collectors.toList());
-	}
+        return clientes.stream().map(this::mapToDomain).toList();
+    }
 
-	@Override
-	public List<Cliente> buscarClientePorCpf(String cpf) {
-		Optional<ClienteEntity> clientes = clienteRepository.findByCpf(cpf);
+    @Override
+    public List<Cliente> buscarClientePorCpf(String cpf) {
+        Optional<ClienteEntity> clientes = clienteRepository.findByCpf(cpf);
 
-		if(clientes.isEmpty()){
-			throw new ClienteNaoEncontradoException();
-		}
+        if (clientes.isEmpty()) {
+            throw new ClienteNaoEncontradoException(ERRO_CLIENTE);
+        }
 
-		return clientes.stream().map(this::mapToDomain).collect(Collectors.toList());
-	}
+        return clientes.stream().map(this::mapToDomain).toList();
+    }
 
-	private Cliente mapToDomain(ClienteEntity clienteEntity) {
-		return new Cliente(
-				clienteEntity.getCpf(),
-				clienteEntity.getNome(),
-				clienteEntity.getEndereco(),
-				clienteEntity.getCep()
-		);
-	}
-	
-	private ClienteEntity mapToEntity(Cliente cliente) {
-		return new ClienteEntity(
-				cliente.getCpf(),
-				cliente.getNome(),
-				cliente.getEndereco(),
-				cliente.getCep());
-	}
+    private Cliente mapToDomain(ClienteEntity clienteEntity) {
+        return new Cliente(
+                clienteEntity.getCpf(),
+                clienteEntity.getNome(),
+                clienteEntity.getEndereco(),
+                clienteEntity.getCep()
+        );
+    }
+
+    private ClienteEntity mapToEntity(Cliente cliente) {
+        return new ClienteEntity(
+                cliente.getCpf(),
+                cliente.getNome(),
+                cliente.getEndereco(),
+                cliente.getCep());
+    }
 }

@@ -64,27 +64,6 @@ class ClienteJpaGatewayTest {
         assertEquals(clienteEntityEsperado.getCep(), clienteEntityCapturado.getCep());
     }
 
-//    @Test
-//    void deveCadastrarCliente() {
-//        Cliente cliente = new Cliente(
-//                "19276445854",
-//                "Anderson Rodrigues",
-//                "Rua Aura",
-//                "09981-400"
-//        );
-//
-//        ClienteEntity clienteEntity = new ClienteEntity(
-//                "19276445854",
-//                "Anderson Rodrigues",
-//                "Rua Aura",
-//                "09981-400"
-//        );
-//
-//        clienteJpaGateway.cadastrarCliente(cliente);
-//
-//        Mockito.verify(clienteRepository, Mockito.times(1)).save(clienteEntity);
-//    }
-
     @Test
     void deveBuscarClientePorNome() {
         String nome = "Anderson Rodrigues";
@@ -152,44 +131,6 @@ class ClienteJpaGatewayTest {
         });
         Mockito.verify(clienteRepository, Mockito.times(1)).findByCep(cep);
     }
-
-//    @Test
-//    void deveAtualizarCliente() {
-//        String cpf = "19276445854";
-//
-//        Cliente clienteAtualizado = new Cliente(
-//                cpf,
-//                "Anderson Rodrigues 2",
-//                "Rua Aura 2",
-//                "09981401"
-//        );
-//
-//        Optional<ClienteEntity> clienteAntigoRetornado = Optional.of(new ClienteEntity(
-//                "19276445854",
-//                "Anderson Rodrigues",
-//                "Rua Aura",
-//                "09981400"
-//        ));
-//
-//        ClienteEntity clienteAtualizadoSalvo = new ClienteEntity(
-//                cpf,
-//                "Anderson Rodrigues 2",
-//                "Rua Aura 2",
-//                "09981401"
-//        );
-//
-//        Mockito.when(clienteRepository.findByCpf(cpf)).thenReturn(clienteAntigoRetornado);
-//        Mockito.when(clienteRepository.save(clienteAtualizadoSalvo)).thenReturn(clienteAtualizadoSalvo);
-//
-//        Optional<Cliente> clienteRetornado = clienteJpaGateway.atualizarCliente(cpf, clienteAtualizado);
-//
-//        assertTrue(clienteRetornado.isPresent());
-//        assertEquals(clienteAtualizado.getCpf(), clienteRetornado.get().getCpf());
-//        assertEquals(clienteAtualizado.getNome(), clienteRetornado.get().getNome());
-//        assertEquals(clienteAtualizado.getEndereco(), clienteRetornado.get().getEndereco());
-//        assertEquals(clienteAtualizado.getCep(), clienteRetornado.get().getCep());
-//        Mockito.verify(clienteRepository, Mockito.times(1)).findByCpf(cpf);
-//    }
 
     @Test
     void deveAtualizarCliente() {

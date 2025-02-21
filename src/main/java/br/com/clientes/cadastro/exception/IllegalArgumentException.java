@@ -1,12 +1,10 @@
 package br.com.clientes.cadastro.exception;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+public class IllegalArgumentException extends RuntimeException {
 
-@Getter
-@AllArgsConstructor
-public class IllegalArgumentException extends SystemBaseException{
-    private final String code = "cliente.dateTimeParseException";
-    private final Integer httpStatus = 500;
-    private String message;
+    public IllegalArgumentException(String message) {
+        super(message);
+    }
+
 }
+
